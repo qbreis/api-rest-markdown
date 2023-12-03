@@ -1,0 +1,60 @@
+/*
+CSS support for Markdown
+*/
+
+img { 
+    max-width: 200px;
+    margin: 0 auto;
+    display: block;
+}
+pre + p em, /* Caption for pieces of code 
+    ```js
+    Code goes here
+    ```
+    *Caption goes here*
+    */
+img + em { /* Caption for pictures 
+    ![Alternative text for image](https://blog-qbreis.vercel.app/images/logo-github.svg)
+    *Caption goes here*
+    */
+    /* style your captions here */
+    display: block;text-align: center;
+    color: rgba(76,86,106,.8);
+    margin: 0.5em 0;
+}
+h1 + p em { /* Lead format after h1
+    # Hola World!
+    *Lead content goes here*
+    */
+    font-style: normal;font-size: 1.5em; 
+}
+blockquote { 
+    padding: .1em 1em;
+    background-color: rgba(0,0,0,.05);
+    border-left: 5px solid rgba(0,0,0,.1);
+    font-size: .9em;
+    color: rgba(76,86,106,.8);
+}
+
+/*
+highlightjs
+*/
+
+pre code.hljs {
+    padding: 1em;
+    display: inline-block;
+    width: calc(100% - 2em);
+    font-size: 1.2em;
+}
+pre code.hljs .loc { width: 100%;display: inline-block; }
+
+.highlighted { 
+    display: inline-block;
+    width: 100%;
+    background-color: rgba(255, 255, 255, .2);
+    margin-left: -1em;
+    width: calc(100% + 1em) !important;
+    padding-left: 1em;
+}
+
+.hljs-attr,.hljs-punctuation{ color:#ebd384 !important; }
