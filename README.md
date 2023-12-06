@@ -34,11 +34,11 @@ Make API requests to generate Markdown content. Refer to the API documentation f
 
 ## API Documentation
 
-Explore the [API documentation](API_DOCUMENTATION.md) for details on available endpoints and how to use them.
+Explore the [API documentation](./docs/API_DOCUMENTATION.md) for details on available endpoints and how to use them.
 
 ## Contributing
 
-Contributions are welcome! Please check the [contribution guidelines](CONTRIBUTING.md) before making any changes.
+Contributions are welcome! Please check the [contribution guidelines](./docs/CONTRIBUTING.md) before making any changes.
 
 ## License
-This project is licensed under the MIT license. See [LICENSE.md](https://github.com/qbreis/api-rest-markdown/LICENSE.md) for the full license.
+This project is licensed under the MIT license. See [LICENSE.md](https://github.com/qbreis/api-rest-markdown/blob/main/LICENSE) for the full license.
