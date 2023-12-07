@@ -42,10 +42,6 @@ $config = [
     ],
 ];
 
-
-echo '<pre>config: ';print_r($config);echo '</pre>';
-echo '<pre>_SERVER: ';print_r($_SERVER);echo '</pre>';
-
 // Configure the Environment with all the CommonMark parsers/renderers.
 $environment = new Environment($config);
 $environment->addExtension(new CommonMarkCoreExtension());
