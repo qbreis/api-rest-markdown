@@ -1,6 +1,6 @@
 # API Rest Markdown
 
-Api Rest endpoint to get all posts data from one Github repository with all posts in Markdown format.
+Api Rest endpoint to get all posts data from one Github repository with all posts in Markdown format...
 
 ## Features
 
