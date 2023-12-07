@@ -43,7 +43,7 @@ $config = [
 ];
 
 
-echo '<pre>config - external_link - internal_hosts: ';print_r($config['external_link']['internal_hosts']);echo '</pre>';
+echo '<pre>_SERVER: ';print_r($_SERVER);echo '</pre>';
 
 // Configure the Environment with all the CommonMark parsers/renderers.
 $environment = new Environment($config);
