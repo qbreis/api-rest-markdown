@@ -33,7 +33,7 @@ $config = [
 
     'external_link' => [
         // 'internal_hosts' => 'localhost',
-        'internal_hosts' => ($_SERVER['SERVER_NAME'] === 'localhost') ? 'localhost' : 'qbreis.com',
+        'internal_hosts' => 'www.qbreis.com', // ($_SERVER['SERVER_NAME'] === 'localhost') ? 'localhost' : 'qbreis.com',
         'open_in_new_window' => true,
         'html_class' => 'external-link',
         'nofollow' => '',
