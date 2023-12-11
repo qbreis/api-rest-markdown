@@ -1,6 +1,6 @@
 # API Rest Markdown - Chapter #1 Markdown to HTML / Git setup
 
-In this chapter I want to get my Markdown into Html with all I need plus setting up a repo on Github.
+In this chapter I want to get my Markdown into Html with all I need.
 
 ## Features
 
