@@ -10,7 +10,7 @@ tags:
 
 <strong>*Hard coded* strong HTML element inside MD!</strong>
 
-[local link](posts/hola-world.md)
+[local link](https://www.qbreis.com/api-rest-markdown/posts/hola-world.md)
 
 [Dillinger Markdown Editor](https://dillinger.io)
 
