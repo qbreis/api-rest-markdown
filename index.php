@@ -60,7 +60,7 @@ $environment->addRenderer(IndentedCode::class, new IndentedCodeRenderer(['html',
 $converter = new MarkdownConverter($environment);
 
 // $markdown = file_get_contents('posts/hola-world.md');
-$markdown = file_get_contents('posts/api-rest-markdown-1.md');
+$markdown = file_get_contents('posts/api-rest-markdown-2.md');
 
 $markdownConverted = $converter->convert($markdown);
 
