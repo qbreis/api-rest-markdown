@@ -470,6 +470,19 @@ if (me.getDistanceTo(you.position) < 200) {
 /* ... Same as original. Omitted for brevity. */
 ``````
 
+## 1.7 Documentation
+
+I will start using this same project to keep documenting itself. So I create new Markdown file `posts/api-rest-markdown-1.md` and I will also update manually my `index.php`:
+
+```php
+/* ... Same as original. Omitted for brevity. */
+
+// $markdown = file_get_contents('posts/hola-world.md');
+$markdown = file_get_contents('posts/api-rest-markdown-1.md');
+
+/* ... Same as original. Omitted for brevity. */
+```
+
 ## Reference links
 
 - [League\CommonMark](https://commonmark.thephpleague.com) - Robust, highly-extensible Markdown parser for PHP.
