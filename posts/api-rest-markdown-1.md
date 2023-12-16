@@ -22,7 +22,7 @@ I want Rest Api to:
 
 I start documenting the process through [Dillinger](https://dillinger.io), an online cloud-enabled, HTML5, buzzword-filled Markdown editor.
 
-After in [Chapter #3](https://github.com/qbreis/api-rest-markdown/tree/dev-chapter-3-refactor) I will start using this same project to keep documenting itself.
+At the end of this same chapter I will start using this same project to keep documenting itself.
 
 ### 1.1 Md to Html
 
@@ -469,6 +469,19 @@ if (me.getDistanceTo(you.position) < 200) {
 
 /* ... Same as original. Omitted for brevity. */
 ``````
+
+## 1.7 Documentation
+
+I will start using this same project to keep documenting itself. So I create new Markdown file `posts/api-rest-markdown-1.md` and I will also update manually my `index.php`:
+
+```php
+/* ... Same as original. Omitted for brevity. */
+
+// $markdown = file_get_contents('posts/hola-world.md');
+$markdown = file_get_contents('posts/api-rest-markdown-1.md');
+
+/* ... Same as original. Omitted for brevity. */
+```
 
 ## Reference links
 
