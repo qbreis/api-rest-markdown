@@ -1,6 +1,6 @@
-# API Rest Markdown
+# API Rest Markdown - Chapter #1 Markdown to HTML / Git setup
 
-Api Rest endpoint to get all posts data from one Github repository with all posts in Markdown format.
+In this chapter I want to get my Markdown into Html with all I need.
 
 ## Features
 
@@ -41,4 +41,5 @@ Explore the [API documentation](./docs/API_DOCUMENTATION.md) for details on avai
 Contributions are welcome! Please check the [contribution guidelines](./docs/CONTRIBUTING.md) before making any changes.
 
 ## License
+
 This project is licensed under the MIT license. See [LICENSE.md](https://github.com/qbreis/api-rest-markdown/blob/main/LICENSE) for the full license.
