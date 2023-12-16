@@ -2,8 +2,9 @@
 layout: post
 title: I Love Markdown
 tags:
-  - test
-  - example
+    - test
+    - example
+ 
 ---
 # Hola World!
 *Lead content.*
@@ -17,7 +18,7 @@ tags:
 ![Alternative text for image](https://blog-qbreis.vercel.app/images/logo-github.svg)
 *I want some optional caption for some of my pictures.*
 
-```js{1,4-5} Do not leave spaces after commas and hyphens
+```js{1,4-5} Do not leave spaces after commas, hyphens or the language specification and the opening curly braces
 // Love at first sight
 if (me.getDistanceTo(you.position) < 200) {
   me.setFeelings({
