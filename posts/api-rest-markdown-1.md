@@ -22,7 +22,7 @@ I want Rest Api to:
 
 I start documenting the process through [Dillinger](https://dillinger.io), an online cloud-enabled, HTML5, buzzword-filled Markdown editor.
 
-After in [Chapter #3](https://github.com/qbreis/api-rest-markdown/tree/dev-chapter-3-refactor) I will start using this same project to keep documenting itself.
+At the end of this same chapter I will start using this same project to keep documenting itself.
 
 ### 1.1 Md to Html
 
