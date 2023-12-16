@@ -20,10 +20,20 @@ use Spatie\CommonMarkHighlighter\IndentedCodeRenderer;
 
 use League\CommonMark\MarkdownConverter;
 
-function get_markdown($markdownFile, $config) {
+/* Note #1
+I choose using a constant MARKDOWN_OPTIONS inside the function as long as
+environment configuration is unlikely to change across different calls,
+otherwise I would pass this environment configuration as a parameter
+in this same function.
+*/
+
+/* Note #2
+When Markdown has no Front Matter I will return, for the moment, content in body as well with title: Untitled and the rest of meta data empty.
+*/
+function get_markdown($markdownFile) {
 
     // Configure the Environment with all the CommonMark parsers/renderers.
-    $environment = new Environment($config);
+    $environment = new Environment(MARKDOWN_OPTIONS); /* Note #1 */
     $environment->addExtension(new CommonMarkCoreExtension());
     
     // Add FrontMatterExtension
@@ -38,20 +48,20 @@ function get_markdown($markdownFile, $config) {
     
     // Instantiate the converter engine and start converting some Markdown!
     $converter = new MarkdownConverter($environment);
-    
     $markdown = file_get_contents($markdownFile);
-    
     $markdownConverted = $converter->convert($markdown);
- 
     $frontMatter = $markdownConverted instanceof RenderedContentWithFrontMatter
         ?
         $markdownConverted->getFrontMatter()
         :
-        '';
-
-    if($frontMatter){
-        $frontMatter['body'] = $markdownConverted->getContent();
-    }
-
+        /* Note #2 */
+        // array()
+        array(
+            'title' => 'Untitled', 
+            // 'date' => '0000-00-00', 
+            // 'tags' => array(),
+        )
+        ;
+    $frontMatter['body'] = $markdownConverted->getContent();
     return $frontMatter;
 }
