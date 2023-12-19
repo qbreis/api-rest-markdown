@@ -2,49 +2,14 @@
 
 In this chapter I want to do some refactoring.
 
-## 2.1 One detail
+## 2.1 Config file
 
-As I am deploying my project using my own server online `www.qbreis.com` I want to do small change in `posts/hola-world.md`:
-
-```md
-/* ... Same as original. Omitted for brevity. */
-
-[local link](https://www.qbreis.com/api-rest-markdown/)
-
-/* ... Same as original. Omitted for brevity. */
-```
-
-And also in `index.php`:
-
-```php
-/* ... Same as original. Omitted for brevity. */
-
-// Define your configuration, if needed
-$config = [
-    'html_input' => 'escape', // How to handle raw HTML. 'strip' will ignore all html tags not allowed, while 'escape' will allow but escape them.
-    'allow_unsafe_links' => false, // Whether unsafe links are permitted.
-
-    'external_link' => [
-        'internal_hosts' => 'www.qbreis.com',
-        'open_in_new_window' => true,
-        'html_class' => 'external-link',
-        'nofollow' => '',
-        'noopener' => 'external',
-        'noreferrer' => 'external',
-    ],
-];
-
-/* ... Same as original. Omitted for brevity. */
-```
-
-## 2.2 Config file
-
-I create new `config.php`file:
+I create new `config.php` file:
 
 ```php
 <?php
 /** Posts folder name */
-define('INTERNAL_HOST', 'www.qbreis.com');
+define('INTERNAL_HOST', 'localhost');
 
 /** Array of configuration options for the Environment or converter classes */
 define('MARKDOWN_OPTIONS', [
@@ -62,9 +27,11 @@ define('MARKDOWN_OPTIONS', [
 ]);
 ```
 
+I still don't know from what server I will consume this REST API endpoint, when I will know I will change `INTERNAL_HOST` accordingly to make this work.
+
 In my `index.php`:
 
-```php
+```php{26}
 <?php
 require_once __DIR__ . '/config.php';
 
@@ -95,7 +62,7 @@ $environment = new Environment(MARKDOWN_OPTIONS);
 /* ... Same as original. Omitted for brevity. */
 ```
 
-## 2.3 Includes folder
+## 2.2 Includes folder
 
 I create new `includes/index,php`:
 
@@ -116,7 +83,7 @@ require_once __DIR__ . '/includes/index.php';
 /* ... Same as original. Omitted for brevity. */
 ```
 
-# 2.4 Get Markdown Function
+## 2.3 Get Markdown Function
 
 In `includes/functions.php`:
 
@@ -201,7 +168,7 @@ require_once __DIR__ . '/../includes/functions.php';
 
 Finally in `index.php`:
 
-```php
+```php{4}
 <?php
 require_once __DIR__ . '/includes/index.php';
 
@@ -230,14 +197,158 @@ echo '
     </body>
 </html>
 ';
- ```
- 
+```
+
+### 2.3.1 Get Markdown Function - Add appropriate validation
+
+I want to add appropriate validation, error handling and security measures to this function in `includes/functions.php` basically to ensure the file is safe and meets corresponding requirements:
+
+
+
+## 2.4 Need to check Server type
+
+At this point I can see links in my posts are linked as external links when `internal_host` is set to `localhost` in `index.php` (see [Chapter #1 - Markdown to HTML - 1.5 Links](https://github.com/qbreis/api-rest-markdown/tree/dev-chapter-1-md-to-html)) but this will be wrong when project is in my online server [qbreis.com](http://www.qbreis.com).
+
+
+To solve this I can use the server name (`$_SERVER['SERVER_NAME']`) or `.env` file for environment configuration in PHP.
+
+Having into account that:
+
+1. I don't want additional files or libraries (such as `dotenv`) to load variables from the `.env` file.
+2. I choose simplicity and I don't want the application to have complex environment configurations.
+
+I choose using server name so I update `config.php`:
+
+```php{}
+<?php
+
+/** Need to check Server type */
+define(
+    'INTERNAL_HOST', 
+    $_SERVER['SERVER_NAME'] === 'localhost'
+    ?
+    'localhost'
+    :
+    'www.qbreis.com'
+);
+
+/* ... Same as original. Omitted for brevity. */
+```
+
+ ## 2.5 Friendly URL - Htaccess
+
+ I want to access any post in `posts` folder through friendly URLs like: 
+
+- [http://localhost/api-rest-markdown/api-rest-markdown-1](http://localhost/api-rest-markdown/api-rest-markdown-1) - Single post - Returning data in JSON to be cosumed from whatever online server, I still don't know.
+- [http://localhost/api-rest-markdown/preview/api-rest-markdown-1](http://localhost/api-rest-markdown/preview/api-rest-markdown-1) - Single post - Returning HTML preview content to be loaded from this same REST API.
+
+> While it is generally not considered a good practice for a REST API to return both JSON and HTML responses I want to use this same project to get a simple fast preview in HTML for each Markdown post, so I will resolve this later with some kind of [Content Negotiation](https://restfulapi.net/content-negotiation/).
+
+In my `.htaccess` file, I want to rewrite the URLs to pass the requested path as the "_REQUEST" parameter to index.php. So I create `.htaccess` file in root:
+
+```bash
+RewriteEngine On
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?_REQUEST=$1 [L]
+```
+
+And then I update `index.php`:
+
+```php{16-25}
+/* ... Same as original. Omitted for brevity. */
+
+echo '
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>'.$get_markdown['title'].'</title>
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/panda-syntax-dark.min.css">
+    </head>
+    <body>
+';
+
+// Get the _REQUEST parameter
+$requestPath = isset($_GET['_REQUEST']) ? $_GET['_REQUEST'] : '';
+
+echo '<pre>requestPath : ';print_r($requestPath);echo '</pre>';
+
+$pathSegments = array_filter( // Remove empty elements
+    explode('/', $requestPath) // Explode the path into an array
+);
+
+echo '<pre>pathSegments : ';print_r($pathSegments);echo '</pre>';
+
+/* ... Same as original. Omitted for brevity. */
+```
+
+## 2.6 Getting the right server URL
+
+I can see I lost link to the external stylesheet `css/style.css` so, although I could use the absolute URL to [qbreis.com/api-rest-markdown/css/style.css](https://www.qbreis.com/api-rest-markdown/css/style.css),  I want to dynamically generate the correct path for stylesheet based on whether REST API is loaded from a local server or an online server.
+
+So I update `config.php`:
+
+```php{}
+<?php
+
+/** Server URL */
+define(
+    'SERVER_URL', 
+    isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http'. // Get the protocol
+    '://'. // scheme delimiter
+    $_SERVER['SERVER_NAME']. // Get the server name
+    dirname($_SERVER['SCRIPT_NAME']) // Get the script path (folder or path within the project)
+);
+
+/* ... Same as original. Omitted for brevity. */
+```
+
+And then I update `index.php`:
+
+```php{10}
+/* ... Same as original. Omitted for brevity. */
+
+echo '
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>'.$get_markdown['title'].'</title>
+        <link rel="stylesheet" href="'.SERVER_URL.'/css/style.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/panda-syntax-dark.min.css">
+    </head>
+    <body>
+';
+
+/* ... Same as original. Omitted for brevity. */
+```
 
 
 
 
+# ...
 
+Following detailed resources I want to be available to access via this REST API:
 
+- / - First 30 posts (JSON)
+- /name-of-post - Single post (JSON)
+- /2 - list of posts from 31 to 60, including (JSON)
+- ?skip=20&limit=10 - list of posts from 21 to 30, including (JSON)
+- /preview - First 30 posts (HTML)
+- /preview/name-of-post - Single post (HTML)
+- /preview/2 - list of posts from 31 to 60, including (HTML)
+- /preview?skip=20&limit=10 - list of posts from 21 to 30, including (HTML)
+
+Default value for skip will be i.e. 30 and for limit i.e. 30.
+
+# add appropriate validation, error handling, and security measures
+
+Check ChatGPT conversation on 17.12.2023 - Server URL Construction
 
  ### 2.4.1 Handeling possible errors
  
@@ -287,3 +398,10 @@ try {
 
  
  
+## Reference links
+
+
+
+## External links
+
+- [Content Negotiation](https://restfulapi.net/content-negotiation/) - Content Negotiation in a REST API.

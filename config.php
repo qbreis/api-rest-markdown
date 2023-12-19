@@ -1,7 +1,23 @@
 <?php
 
-/** Posts folder name */
-define('INTERNAL_HOST', 'www.qbreis.com');
+/** Server URL */
+define(
+    'SERVER_URL', 
+    isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http'. // Get the protocol
+    '://'. // scheme delimiter
+    $_SERVER['SERVER_NAME']. // Get the server name
+    dirname($_SERVER['SCRIPT_NAME']) // Get the script path (folder or path within the project)
+);
+
+/** Need to check Server type */
+define(
+    'INTERNAL_HOST', 
+    $_SERVER['SERVER_NAME'] === 'localhost'
+    ?
+    'localhost'
+    :
+    'www.qbreis.com'
+);
 
 /** Array of configuration options for the Environment or converter classes */
 define('MARKDOWN_OPTIONS', [

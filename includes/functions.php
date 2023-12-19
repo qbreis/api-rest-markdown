@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/utils.php';
+
 // To use Environment with Extensions
 use League\CommonMark\Environment\Environment;
 
@@ -32,36 +34,44 @@ When Markdown has no Front Matter I will return, for the moment, content in body
 */
 function get_markdown($markdownFile) {
 
-    // Configure the Environment with all the CommonMark parsers/renderers.
-    $environment = new Environment(MARKDOWN_OPTIONS); /* Note #1 */
-    $environment->addExtension(new CommonMarkCoreExtension());
-    
-    // Add FrontMatterExtension
-    $environment->addExtension(new FrontMatterExtension());
-    
-    // Add External Links Extension
-    $environment->addExtension(new ExternalLinkExtension());
-    
-    // Add Highlight Renderer
-    $environment->addRenderer(FencedCode::class, new FencedCodeRenderer(['html', 'php', 'js']));
-    $environment->addRenderer(IndentedCode::class, new IndentedCodeRenderer(['html', 'php', 'js']));
-    
-    // Instantiate the converter engine and start converting some Markdown!
-    $converter = new MarkdownConverter($environment);
-    $markdown = file_get_contents($markdownFile);
-    $markdownConverted = $converter->convert($markdown);
-    $frontMatter = $markdownConverted instanceof RenderedContentWithFrontMatter
-        ?
-        $markdownConverted->getFrontMatter()
-        :
-        /* Note #2 */
-        // array()
-        array(
-            'title' => 'Untitled', 
-            // 'date' => '0000-00-00', 
-            // 'tags' => array(),
-        )
-        ;
-    $frontMatter['body'] = $markdownConverted->getContent();
-    return $frontMatter;
+    $checkFile = checkFile($markdownFile);
+    echo '<pre>checkFile('.$markdownFile.')';print_r(checkFile($markdownFile));echo '</pre>';
+
+    if($checkFile['error']) {
+        return $checkFile;
+
+    } else {
+        // Configure the Environment with all the CommonMark parsers/renderers.
+        $environment = new Environment(MARKDOWN_OPTIONS); /* Note #1 */
+        $environment->addExtension(new CommonMarkCoreExtension());
+        
+        // Add FrontMatterExtension
+        $environment->addExtension(new FrontMatterExtension());
+        
+        // Add External Links Extension
+        $environment->addExtension(new ExternalLinkExtension());
+        
+        // Add Highlight Renderer
+        $environment->addRenderer(FencedCode::class, new FencedCodeRenderer(['html', 'php', 'js']));
+        $environment->addRenderer(IndentedCode::class, new IndentedCodeRenderer(['html', 'php', 'js']));
+        
+        // Instantiate the converter engine and start converting some Markdown!
+        $converter = new MarkdownConverter($environment);
+        $markdown = file_get_contents($markdownFile);
+        $markdownConverted = $converter->convert($markdown);
+        $frontMatter = $markdownConverted instanceof RenderedContentWithFrontMatter
+            ?
+            $markdownConverted->getFrontMatter()
+            :
+            /* Note #2 */
+            // array()
+            array(
+                'title' => 'Untitled', 
+                // 'date' => '0000-00-00', 
+                // 'tags' => array(),
+            )
+            ;
+        $frontMatter['body'] = $markdownConverted->getContent();
+        return $frontMatter;
+    }
 }
