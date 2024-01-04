@@ -35,7 +35,6 @@ When Markdown has no Front Matter I will return, for the moment, content in body
 function get_markdown($markdownFile) {
 
     $checkFile = checkFile($markdownFile);
-    echo '<pre>checkFile('.$markdownFile.')';print_r(checkFile($markdownFile));echo '</pre>';
 
     if($checkFile['error']) {
         return $checkFile;

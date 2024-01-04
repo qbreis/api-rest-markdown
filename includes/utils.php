@@ -6,9 +6,13 @@ function checkFile($filePath) {
     }
 
     // Validate and sanitize the file path to prevent directory traversal attacks
-    $filePath = realpath($filePath);
+    $filePath = normalizePath(
+        // On windows realpath() will change unix style paths to windows style, that is why I want normalize path!
+        realpath($filePath)
+    );
+    
     if ($filePath === false || strpos($filePath, $_SERVER['DOCUMENT_ROOT']) !== 0) {
-        return ['error' => 'Invalid file path'];
+        return ['error' => 'Invalid file path: '.$filePath.' ('.$_SERVER['DOCUMENT_ROOT'].').'];
     }
 
     // Check if the file exists
@@ -46,4 +50,17 @@ function checkFile($filePath) {
         return ['Error: Invalid MIME type. Only Markdown files are allowed'];
     }
 
+}
+
+/*
+Converts all windows path to UNIX path using the following function.
+It is based in a WordPress core function (wp_normalize_path) and well tested.
+*/
+function normalizePath($path) {
+    $path = str_replace('\\', '/', $path);
+    $path = preg_replace('|(?<=.)/+|', '/', $path);
+    if ( ':' === substr($path, 1, 1)) {
+        $path = ucfirst($path);
+    }
+    return $path;
 }
