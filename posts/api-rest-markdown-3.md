@@ -228,12 +228,17 @@ function checkFile($filePath) {
     }
 
     // Validate and sanitize the file path to prevent directory traversal attacks
-    $filePath = normalizePath(
-        // On windows realpath() will change unix style paths to windows style, that is why I want normalize path!
-        realpath($filePath)
-    );
-    
-    if ($filePath === false || strpos($filePath, $_SERVER['DOCUMENT_ROOT']) !== 0) {
+    if (
+        $filePath === false 
+        || 
+        strpos(
+            // On windows realpath() will change unix style paths to windows style, that is why I want normalize path!
+            normalizePath(
+                realpath($filePath)
+            ), 
+            $_SERVER['DOCUMENT_ROOT']
+        ) !== 0
+        ) {
         return ['error' => 'Invalid file path: '.$filePath.' ('.$_SERVER['DOCUMENT_ROOT'].').'];
     }
 
@@ -244,14 +249,14 @@ function checkFile($filePath) {
 
     // Check if the file is readable
     if (!is_readable($filePath)) {
-        return ['Error: Unable to read the file'];
+        return ['error: Unable to read the file'];
     }
 
     // Check file type (only allow .md files)
     $allowedFileTypes = ['md'];
     $fileExtension = pathinfo($filePath, PATHINFO_EXTENSION);
     if (!in_array(strtolower($fileExtension), $allowedFileTypes)) {
-        return ['Error: Invalid file type. Only Markdown (.md) files are allowed'];
+        return ['error: Invalid file type. Only Markdown (.md) files are allowed'];
     }
 
     // Perform additional security checks, such as checking file size, MIME type, etc.
@@ -259,7 +264,7 @@ function checkFile($filePath) {
     // Check file size (in this example, limit to 10 MB)
     $maxFileSize = 10 * 1024 * 1024; // 10 MB in bytes
     if (filesize($filePath) > $maxFileSize) {
-        return ['Error: File size exceeds the maximum allowed'];
+        return ['error: File size exceeds the maximum allowed'];
     }
 
     // Verify MIME type
@@ -269,7 +274,7 @@ function checkFile($filePath) {
 
     $allowedMimeTypes = ['text/markdown', 'text/plain']; // Adjust the allowed MIME types as needed
     if (!in_array($actualMimeType, $allowedMimeTypes)) {
-        return ['Error: Invalid MIME type. Only Markdown files are allowed'];
+        return ['error: Invalid MIME type. Only Markdown files are allowed'];
     }
 
     // Return null or an empty array to indicate success
@@ -422,6 +427,8 @@ echo '
 
 /* ... Same as original. Omitted for brevity. */
 ```
+
+## 2.7 Preview
 
 
 
